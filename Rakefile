@@ -1,21 +1,24 @@
-INSTALL_DIR=ENV["HOME"]+"/Applications/"
+INSTALL_DIR = ENV["HOME"] + "/Applications/"
+APP_NAME = "SplitFrequency.app"
+SCRIPT_DIR = "#{APP_NAME}/Contents/Resources/Scripts"
 
 rule ".app" => ".applescript"  do |task|
     puts "compiling #{task.source} to #{task.name}"
     system("osacompile -o '#{task.name}' '#{task.source}'") || raise("compile of #{task.name} failed")
+    touch task.name
 end
 
-rule "SplitFrequency.app/Contents/Resources/Scripts/photo-splitfreq.sh" => "photo-splitfreq.sh" do |task|
+rule "#{SCRIPT_DIR}/photo-splitfreq.sh" => "photo-splitfreq.sh" do |task|
     cp task.source, task.name
 end
 
-task :app => "SplitFrequency.app"
-task :resources => "SplitFrequency.app/Contents/Resources/Scripts/photo-splitfreq.sh"
+task :app => APP_NAME
 
-task :default => [:app, :resources] do
+task :resources => "#{SCRIPT_DIR}/photo-splitfreq.sh"
 
-end
+task :default => [:app, :resources]
 
 task :install => :default do
-    cp_r "SplitFrequency.app", INSTALL_DIR
+    cp_r APP_NAME, INSTALL_DIR
 end
+
