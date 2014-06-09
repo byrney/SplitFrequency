@@ -10,9 +10,11 @@ on convert_args(argv)
 end convert_args
 
 on exec(args)
+	set myPath to (POSIX path of(path to me))
+	set scriptPath to (quoted form of (myPath & "Contents/Resources/Scripts/photo-splitfreq.sh"))
 	do shell script "
 	export PATH=$HOME/bin:/usr/local/bin:$PATH
-	$HOME/scripts/photo-splitfreq.sh " & args & " && rm " & args
+	" & scriptPath & " " & args & " && rm " & args
 end exec
 
 on open (file_list)
